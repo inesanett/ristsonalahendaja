@@ -7,7 +7,12 @@ setup(
     install_requires=[
         # List your package dependencies here
         'numpy',
-        'pandas'
+        'pandas',
+        'estnltk',
+        'wikipedia',
+        'unidecode',
+        
+
     ],
     author='Ines Anett Nigol',
     author_email='ines.anett.nigol@ut.ee',
