@@ -11,7 +11,7 @@ setup(
         'estnltk',
         'wikipedia',
         'unidecode',
-        
+        'gensim',
 
     ],
     author='Ines Anett Nigol',

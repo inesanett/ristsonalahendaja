@@ -31,3 +31,10 @@ def solving_algorithm(crossword):
         result = solving_algorithm(new_crossword)
         results.extend(result)
     return results
+
+def display_results(solving_algorithm_results):
+    sorted_results = sorted(solving_algorithm_results, key = lambda x:x.score)[::-1]
+    for solution in sorted_results:
+        print(solution.score)
+        print(solution)
+    return

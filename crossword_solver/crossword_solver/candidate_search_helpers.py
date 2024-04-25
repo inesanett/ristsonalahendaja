@@ -1,6 +1,7 @@
 import re
 import unidecode
 from dataclasses import dataclass
+from gensim.models import KeyedVectors
 
 # Wikipedia search
 import wikipedia as wp
@@ -18,6 +19,16 @@ WORDNET_TAG = 'wordnet'
 WORDNET_LEMMAS_WEIGHT = 0.9
 WORDNET_HYPONYMS_WEIGHT = 0.8
 WORDNET_SIMILAR_WEIGHT = 0.8
+
+# Abbreviation
+ABBREVIATION_TAG = 'abbreviation'
+ABBREVIATION_WEIGHT = 0.9
+
+# Word2Vec
+word2vec_model = KeyedVectors.load_word2vec_format('../data/lemmas.cbow.s100.w2v.bin', binary=True)
+WORD2VEC_TAG = 'word2vec'
+WORD2VEC_WEIGHT = 0.7
+MAX_WORD2VEC_RESULTS = 20
 
 @dataclass
 class Candidate():
@@ -144,6 +155,21 @@ def expand_candidates(candidate_list):
         new_candidates.extend(expand_candidate(candidate))
     return remove_duplicates(new_candidates)
 
+def create_abbreviated_candidates(hint):
+    # Check if the number of words in the clue is equal to the length of the expected answer
+    # If True, add abbrevated form of hint as a possible candidate
+    splitted = hint.hint.split(" ")
+    if len(splitted) == hint.length:
+        abbreviation = ''.join([word[0] for word in splitted]).upper()
+        return convert_results_to_candidates([abbreviation], ABBREVIATION_TAG, ABBREVIATION_WEIGHT)
+    return []
+
+def create_word2vec_candidates(hint, max_results = MAX_WORD2VEC_RESULTS):
+    splitted = hint.hint.split(" ")
+    lemmas = [lemmatise_text(word).lower() for word in splitted]
+    neighbours_info = word2vec_model.most_similar(positive=lemmas, topn = max_results)
+    neighbours = [neighbour[0] for neighbour in neighbours_info]
+    return convert_results_to_candidates(neighbours, tag = WORD2VEC_TAG, weight = WORD2VEC_WEIGHT)
 
 ## Find candidates from different sources
 def search_candidates(query, max_wikipedia_results = MAX_WIKIPEDIA_RESULTS):
