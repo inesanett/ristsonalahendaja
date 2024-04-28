@@ -15,7 +15,7 @@ class Hint():
         self.x = x
         self.y = y
         self.direction = direction
-        self.hint = hint
+        self.hint = hint # A list of detected hint texts
         self.length = length
         coordinates = []
         if direction == Direction.RIGHT:
@@ -31,9 +31,9 @@ class Hint():
             for i in range(1, length+1):
                 coordinates.append((x, y+i))
         self.coordinates = coordinates
-        candidates = search_candidates(self.hint)
-        filtered_candidates = [c for c in candidates if c.length() == self.length]
-        self.candidates = sorted(filtered_candidates, key = lambda x: x.weight, reverse = True)
+        self.candidates = search_candidates(self.hint)
+        #filtered_candidates = [c for c in candidates if c.length() == self.length]
+        #self.candidates = sorted(filtered_candidates, key = lambda x: x.weight, reverse = True)
         
     def __repr__(self):
         return self.hint

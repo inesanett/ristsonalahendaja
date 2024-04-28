@@ -50,7 +50,8 @@ class Candidate():
 def convert_results_to_candidates(results_list, tag, weight):
     return [Candidate(candidate, tag, weight) for candidate in results_list]
     
-def wikipedia_search(query, max_wikipedia_results):
+def wikipedia_search(text, max_wikipedia_results = MAX_WIKIPEDIA_RESULTS):
+    query = lemmatise_text(text)
     wiki_results = wp.search(query, results = max_wikipedia_results)
     return convert_results_to_candidates(wiki_results, WIKI_TAG, WIKI_WEIGHT)
 
@@ -59,9 +60,9 @@ def lemmatise_text(original):
     text.tag_layer(['morph_analysis'])
     return ' '.join((t[0] for t in text.lemma))
 
-def wordnet_search(query):
+def wordnet_search(text):
     wn = Wordnet()
-    synsets = wn[lemmatise_text(query)]
+    synsets = wn[text]
     lemmas = []
     hyponyms = []
     similar = []
@@ -118,23 +119,23 @@ def clean_candidates(candidate_list):
 
         
 ## Expanding candidates
-def create_joint_form(candidate_text, source, weight):
-    new_form = candidate_text.replace(' ', '')
+def create_joint_form(text, source, weight):
+    new_form = text.replace(' ', '')
     new_source = source + ' joint'
     return Candidate(new_form, source = new_source, weight = weight)
 
-def create_separated_forms(candidate_text, source, weight):
+def create_separated_forms(text, source, weight):
     new_candidates = []
-    new_parts = candidate_text.split()
+    new_parts = text.split()
     new_source = source + ' separated'
     for part in new_parts:
         new_candidates.append(Candidate(part, source = new_source, weight = weight))
     return new_candidates
 
-def create_new_forms_from_candidate_text(candidate_text, source, weight):
+def create_new_forms_from_candidate_text(text, source, weight):
     new_candidates = []
-    new_candidates.append(create_joint_form(candidate_text, source, weight))
-    new_candidates.extend(create_separated_forms(candidate_text, source, weight))
+    new_candidates.append(create_joint_form(text, source, weight))
+    new_candidates.extend(create_separated_forms(text, source, weight))
     return new_candidates
 
 def expand_candidate(candidate):
@@ -155,29 +156,39 @@ def expand_candidates(candidate_list):
         new_candidates.extend(expand_candidate(candidate))
     return remove_duplicates(new_candidates)
 
-def create_abbreviated_candidates(hint):
+def create_abbreviated_candidate(text, length):
     # Check if the number of words in the clue is equal to the length of the expected answer
     # If True, add abbrevated form of hint as a possible candidate
-    splitted = hint.hint.split(" ")
-    if len(splitted) == hint.length:
+    splitted = text.split(" ")
+    if len(splitted) == length:
         abbreviation = ''.join([word[0] for word in splitted]).upper()
         return convert_results_to_candidates([abbreviation], ABBREVIATION_TAG, ABBREVIATION_WEIGHT)
     return []
 
-def create_word2vec_candidates(hint, max_results = MAX_WORD2VEC_RESULTS):
-    splitted = hint.hint.split(" ")
-    lemmas = [lemmatise_text(word).lower() for word in splitted]
-    neighbours_info = word2vec_model.most_similar(positive=lemmas, topn = max_results)
-    neighbours = [neighbour[0] for neighbour in neighbours_info]
-    return convert_results_to_candidates(neighbours, tag = WORD2VEC_TAG, weight = WORD2VEC_WEIGHT)
+def create_word2vec_candidates(text, max_results = MAX_WORD2VEC_RESULTS):
+    lemmatised_text = lemmatise_text(text).lower()
+    lemma_list = lemmatised_text.split(" ")
+    # Filter out lemmas that exist in vocabulary
+    filtered = [lemma for lemma in lemma_list if lemma in word2vec_model.key_to_index.keys()]
+    if len(filtered) > 0:
+        neighbours_info = word2vec_model.most_similar(positive=filtered, topn = max_results)
+        neighbours = [neighbour[0] for neighbour in neighbours_info]
+        return convert_results_to_candidates(neighbours, tag = WORD2VEC_TAG, weight = WORD2VEC_WEIGHT)
+    return []
 
-## Find candidates from different sources
-def search_candidates(query, max_wikipedia_results = MAX_WIKIPEDIA_RESULTS):
-    wiki_candidates = wikipedia_search(query, max_wikipedia_results)
-    wordnet_candidates = wordnet_search(query)
-    candidate_list = wiki_candidates + wordnet_candidates
+def search_candidates(hint):
+    hint_variations = hint.hint
+    length = hint.length
+    candidate_list = []
+    for text in hint_variations:
+        lemmatised_text = lemmatise_text(text)
+        candidate_list.extend(wikipedia_search(lemmatised_text))
+        candidate_list.extend(wordnet_search(lemmatised_text))
+        candidate_list.extend(create_abbreviated_candidate(text, length))
+        candidate_list.extend(create_word2vec_candidates(lemmatised_text))
     clean_candidates(candidate_list)
     candidate_list = remove_duplicates(candidate_list)
     candidate_list = expand_candidates(candidate_list)
-    return remove_duplicates(candidate_list)
-    
+    candidate_list = remove_duplicates(candidate_list)
+    sorted_candidates = sorted(candidate_list, key = lambda x: x.weight, reverse = True)
+    return sorted_candidates
