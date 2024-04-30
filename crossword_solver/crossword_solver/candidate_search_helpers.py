@@ -2,13 +2,14 @@ import re
 import unidecode
 from dataclasses import dataclass
 from gensim.models import KeyedVectors
+import pandas as pd
 
 # Wikipedia search
 import wikipedia as wp
 wp.set_lang('et')
 MAX_WIKIPEDIA_RESULTS = 50
 WIKI_TAG = 'viki'
-WIKI_WEIGHT = 0.7
+WIKI_WEIGHT = 0.6
 
 # WordNet search
 from estnltk import download
@@ -19,6 +20,9 @@ WORDNET_TAG = 'wordnet'
 WORDNET_LEMMAS_WEIGHT = 0.9
 WORDNET_HYPONYMS_WEIGHT = 0.8
 WORDNET_SIMILAR_WEIGHT = 0.8
+WORDNET_VOCAB = 'wordnet vocab'
+WORDNET_VOCAB_WEIGHT = 0.8
+wn_voc = pd.read_parquet('../data/wordnet_contents.parquet')
 
 # Abbreviation
 ABBREVIATION_TAG = 'abbreviation'
@@ -52,8 +56,10 @@ def convert_results_to_candidates(results_list, tag, weight):
     
 def wikipedia_search(text, max_wikipedia_results = MAX_WIKIPEDIA_RESULTS):
     query = lemmatise_text(text)
-    wiki_results = wp.search(query, results = max_wikipedia_results)
-    return convert_results_to_candidates(wiki_results, WIKI_TAG, WIKI_WEIGHT)
+    if len(query) > 0:
+        wiki_results = wp.search(query, results = max_wikipedia_results)
+        return convert_results_to_candidates(wiki_results, WIKI_TAG, WIKI_WEIGHT)
+    return []
 
 def lemmatise_text(original):
     text = Text(original)
@@ -176,16 +182,30 @@ def create_word2vec_candidates(text, max_results = MAX_WORD2VEC_RESULTS):
         return convert_results_to_candidates(neighbours, tag = WORD2VEC_TAG, weight = WORD2VEC_WEIGHT)
     return []
 
+def find_regex_match(hint_text, length, wn_list):
+    if "..." not in hint_text:
+        return []
+    matching_group = f"(.{{{length}}})"
+    pattern ="^"+ hint_text.replace("...", matching_group)+ "$"
+    matches = []
+    for w in wn_list:
+        match = re.search(pattern, w)
+        if match is not None:
+            matches.append(match.group(1))
+    if len(matches) > 0:
+        return convert_results_to_candidates(matches, tag = WORDNET_VOCAB, weight = WORDNET_VOCAB_WEIGHT)
+    return []
+
 def search_candidates(hint):
-    hint_variations = hint.hint
+    hint_text = hint.hint
     length = hint.length
     candidate_list = []
-    for text in hint_variations:
-        lemmatised_text = lemmatise_text(text)
-        candidate_list.extend(wikipedia_search(lemmatised_text))
-        candidate_list.extend(wordnet_search(lemmatised_text))
-        candidate_list.extend(create_abbreviated_candidate(text, length))
-        candidate_list.extend(create_word2vec_candidates(lemmatised_text))
+    lemmatised_text = lemmatise_text(hint_text)
+    candidate_list.extend(wikipedia_search(lemmatised_text))
+    candidate_list.extend(wordnet_search(lemmatised_text))
+    candidate_list.extend(create_abbreviated_candidate(hint_text, length))
+    candidate_list.extend(create_word2vec_candidates(lemmatised_text))
+    candidate_list.extend(find_regex_match(hint_text, length, wn_voc['word']))
     clean_candidates(candidate_list)
     candidate_list = remove_duplicates(candidate_list)
     candidate_list = expand_candidates(candidate_list)

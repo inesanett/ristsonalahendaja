@@ -18,10 +18,12 @@ def solving_algorithm(crossword):
     
     hint = crossword.hints[0]
     suitable_candidates = find_suitable_candidates(hint, crossword)
-    if len(suitable_candidates)==0:
-        return []
     
     results = []
+    new_crossword = deepcopy(crossword)
+    new_crossword.hints.pop(0)
+    result = solving_algorithm(new_crossword)
+    results.extend(result)
     for candidate in suitable_candidates:
         new_crossword = deepcopy(crossword)
         for i, (x, y) in enumerate(hint.coordinates):
