@@ -12,7 +12,9 @@ setup(
         'wikipedia',
         'unidecode',
         'gensim',
-
+        'scipy'==1.12,
+        'pytesseract',
+        'Levenshtein'
     ],
     author='Ines Anett Nigol',
     author_email='ines.anett.nigol@ut.ee',

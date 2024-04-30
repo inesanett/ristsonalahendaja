@@ -3,6 +3,7 @@ from enum import Enum
 import itertools
 import pickle
 from crossword_solver.candidate_search_helpers import search_candidates, Candidate
+import numpy as np
         
 class Direction(Enum):
     RIGHT = 0
@@ -31,7 +32,7 @@ class Hint():
             for i in range(1, length+1):
                 coordinates.append((x, y+i))
         self.coordinates = coordinates
-        self.candidates = search_candidates(self.hint)
+        #self.candidates = search_candidates(self.hint)
         #filtered_candidates = [c for c in candidates if c.length() == self.length]
         #self.candidates = sorted(filtered_candidates, key = lambda x: x.weight, reverse = True)
         
@@ -45,19 +46,18 @@ class Crossword():
         self.hints = hints
         self.out_of_range_character = "■"
         self.unfilled_character = "_"
-        self.matrix = [[self.unfilled_character]*width]*height
+        self.hint_character = "1"
+        self.multihint_character = "2"
+        self.matrix = np.full((width, height), self.unfilled_character, dtype = str)
         self.score = 0
-        for i in range(height): 
-            # For loop to create new lists instead of instances of one list
-            self.matrix[i] = self.matrix[i].copy()
-        
+
     def set_out_of_range_spaces(self, x_from, x_to, y_from, y_to):
         for x, y in itertools.product(range(x_from, x_to), range(y_from, y_to)):
-            self.matrix[y][x] = self.out_of_range_character
+            self.matrix[x, y] = self.out_of_range_character
 
     def __repr__(self):
         result = ""
-        for row in self.matrix:
+        for row in self.matrix.T:
             result+=" ".join(row)+"\n"
         return result
     
