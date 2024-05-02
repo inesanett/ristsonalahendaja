@@ -12,7 +12,7 @@ class Direction(Enum):
     UP = 3
     
 class Hint():   
-    def __init__(self, x, y, direction, hint, length):
+    def __init__(self, x, y, direction, hint, length, candidates=[]):
         self.x = x
         self.y = y
         self.direction = direction
@@ -32,6 +32,7 @@ class Hint():
             for i in range(1, length+1):
                 coordinates.append((x, y+i))
         self.coordinates = coordinates
+        self.candidates = candidates
         #self.candidates = search_candidates(self.hint)
         #filtered_candidates = [c for c in candidates if c.length() == self.length]
         #self.candidates = sorted(filtered_candidates, key = lambda x: x.weight, reverse = True)

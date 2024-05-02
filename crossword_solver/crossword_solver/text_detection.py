@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import pytesseract
+import re
 
 #https://stackoverflow.com/questions/13538748/crop-black-edges-with-opencv
 def crop_edges(image, thresh):
@@ -86,10 +87,16 @@ def detect_text_for_all_squares(grid):
         square.text = predicted_text  
 
 def clean_hint_text(text):
-    # TODO
-    # Sidekriipsuga ühendada asjad
-    # Suvalised sümbolid asendada punktidega
-    return text.strip()
+    clean = text.lower()
+    # Replace all punctuation except .-\n with dots
+    clean = re.sub(r'([^\w\s.-]|_)','.', clean)
+    # Join word parts together if word is written on two lines and joined by -
+    clean = re.sub(r'\b(\w+)-\n(\w+)\b', r'\1\2', clean)
+    # Replace \n with spaces
+    clean = clean.replace('\n', ' ')
+    # Remove unneccessary spaces
+    clean = re.sub(r' +', ' ', clean)
+    return clean.strip()
 
 best_actions = (
     (resize, 5),

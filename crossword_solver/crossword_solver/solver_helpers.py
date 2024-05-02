@@ -4,8 +4,18 @@ import pandas as pd
 import re
 from copy import deepcopy
 
+def find_whole_crossword_candidates(crossword):
+    for hint in crossword.hints:
+        all_candidates = search_candidates(hint)
+        # Only save candidates with the right length
+        filtered = []
+        for c in all_candidates:
+            if len(c.text) == hint.length:
+                filtered.append(c)
+        hint.candidates = filtered
+
 def find_suitable_candidates(hint, crossword):
-    matching = ''.join([crossword.matrix[y][x] for x, y in hint.coordinates]).replace('_', '.')
+    matching = ''.join([crossword.matrix[x, y] for x, y in hint.coordinates]).replace('_', '.')
     suitable_candidates = []
     for c in hint.candidates:
         if re.match(matching, c.text):

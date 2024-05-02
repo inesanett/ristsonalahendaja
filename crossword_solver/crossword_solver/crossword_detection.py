@@ -15,9 +15,6 @@ def detect_crossword(image):
     grid = get_grid_from_image(image)
     detect_text_for_all_squares(grid)
     classify_all_squares(grid)
-
-    print(grid.shape)
-    # Create hints
     hints = []
     for square in grid.flatten():
         square.text = clean_hint_text(square.text)
@@ -46,7 +43,7 @@ def detect_crossword(image):
                     square.grid_y, 
                     Direction.DOWN,
                     bottom_hint,
-                    square.right_hint_len))
+                    square.bottom_hint_len))
 
     crossword = Crossword(grid.shape[0], grid.shape[1], hints)
     
