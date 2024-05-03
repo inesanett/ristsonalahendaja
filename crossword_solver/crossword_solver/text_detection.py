@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import pytesseract
 import re
+import Levenshtein
 
 #https://stackoverflow.com/questions/13538748/crop-black-edges-with-opencv
 def crop_edges(image, thresh):
@@ -11,7 +12,7 @@ def crop_edges(image, thresh):
     return image[np.min(y_nonzero):np.max(y_nonzero), np.min(x_nonzero):np.max(x_nonzero)]
 
 def resize(img, resize_param):
-    res = cv2.resize(img, (0,0), fx=resize_param, fy=resize_param)
+    res = cv2.resize(img, (0,0), fx=resize_param, fy=resize_param, interpolation = cv2.INTER_CUBIC)
     return res
 
 def multiply(img, pixel_multi):
@@ -83,17 +84,30 @@ def process_image_for_ocr(img, actions):
 def detect_text_for_all_squares(grid):
     for square in grid.flatten():
         img = process_image_for_ocr(square.image, best_actions)
-        predicted_text = pytesseract.image_to_string(img, lang = 'est')
-        square.text = predicted_text  
+        predictions = []
+        predictions.append(pytesseract.image_to_string(img, lang = 'est').lower())
+        predictions.append(pytesseract.image_to_string(img, lang = 'est', config = r'--psm 4').lower())
+        predictions.append(pytesseract.image_to_string(img, lang = 'est', config = r'--psm 6').lower())
+        predictions.append(pytesseract.image_to_string(img, lang = 'est', config = r'--psm 12').lower())
+        predictions.append(pytesseract.image_to_string(img, lang = 'est', config = r'--psm 13').lower())
+        # If only one way detects text, it is probably an error
+        empty_predictions = sum([p == "" for p in predictions])
+        if empty_predictions>1:
+            square.text = ""
+        else:
+            square.text = Levenshtein.median(predictions)
 
 def clean_hint_text(text):
     clean = text.lower()
     # Replace all punctuation except .-\n with dots
     clean = re.sub(r'([^\w\s.-]|_)','.', clean)
+    # TODO replace double .. with ...
+
     # Join word parts together if word is written on two lines and joined by -
     clean = re.sub(r'\b(\w+)-\n(\w+)\b', r'\1\2', clean)
+    clean = re.sub(r'\b(\w+)-\n\n(\w+)\b', r'\1\2', clean)
     # Replace \n with spaces
-    clean = clean.replace('\n', ' ')
+    # clean = clean.replace('\n', ' ')
     # Remove unneccessary spaces
     clean = re.sub(r' +', ' ', clean)
     return clean.strip()
@@ -101,7 +115,9 @@ def clean_hint_text(text):
 best_actions = (
     (resize, 5),
     (multiply, 1.5),
+    (adaptive_thresh, cv2.ADAPTIVE_THRESH_MEAN_C, 7, 3),
     (add, -50),
     (morph_open, 3),
+    (morph_close, 3),
     (adaptive_thresh, cv2.ADAPTIVE_THRESH_MEAN_C, 15, 7)
 )

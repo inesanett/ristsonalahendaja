@@ -50,8 +50,10 @@ def classify_all_squares(grid):
             square.right_hint_len = right_empty_length
             continue
         if bottom_empty_length>right_empty_length:
+            square.type = SquareType.HINT
             square.hint_direction = Direction.DOWN
             square.hint_len = bottom_empty_length
         else: 
+            square.type = SquareType.HINT 
             square.hint_direction = Direction.RIGHT
             square.hint_len = right_empty_length

@@ -27,6 +27,7 @@ def detect_crossword(image):
                     square.text,
                     square.hint_len))
         if square.type == SquareType.MULTIHINT:
+            # TODO fix hints withmultiple \n\n 
             hint_texts = square.text.split("\n\n")
             right_hint = hint_texts[0]
             bottom_hint = hint_texts[-1]

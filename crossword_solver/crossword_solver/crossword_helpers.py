@@ -16,7 +16,7 @@ class Hint():
         self.x = x
         self.y = y
         self.direction = direction
-        self.hint = hint # A list of detected hint texts
+        self.hint = hint
         self.length = length
         coordinates = []
         if direction == Direction.RIGHT:
