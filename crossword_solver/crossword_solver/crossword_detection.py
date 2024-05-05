@@ -24,13 +24,13 @@ def detect_crossword(image):
                     square.grid_x, 
                     square.grid_y, 
                     square.hint_direction,
-                    square.text,
+                    square.text.replace('\n', ' '),
                     square.hint_len))
         if square.type == SquareType.MULTIHINT:
             # TODO fix hints withmultiple \n\n 
             hint_texts = square.text.split("\n\n")
-            right_hint = hint_texts[0]
-            bottom_hint = hint_texts[-1]
+            right_hint = hint_texts[0].replace('\n', ' ')
+            bottom_hint = hint_texts[-1].replace('\n', ' ')
             hints.append(
                 Hint(
                     square.grid_x, 
