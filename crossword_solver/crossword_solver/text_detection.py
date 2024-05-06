@@ -3,6 +3,8 @@ import cv2
 import pytesseract
 import re
 import Levenshtein
+from estnltk.taggers import SpellCheckRetagger
+from estnltk import Text
 
 #https://stackoverflow.com/questions/13538748/crop-black-edges-with-opencv
 def crop_edges(image, thresh):
@@ -99,10 +101,14 @@ def detect_text_for_all_squares(grid):
 
 def clean_hint_text(text):
     clean = text.lower()
+    tagged = Text(clean).tag_layer(['words'])
+    spelling_tagger = SpellCheckRetagger()
+    spelling_tagger.retag(tagged)
+    clean_list = [span.normalized_form[0] if span.normalized_form[0] else span.text for span in tagged.words]
+    clean = " ".join(clean_list)
     # Replace all punctuation except .-\n with dots
     clean = re.sub(r'([^\w\s.-]|_)','.', clean)
     # TODO replace double .. with ...
-
     # Join word parts together if word is written on two lines and joined by -
     clean = re.sub(r'\b(\w+)-\n(\w+)\b', r'\1\2', clean)
     clean = re.sub(r'\b(\w+)-\n\n(\w+)\b', r'\1\2', clean)

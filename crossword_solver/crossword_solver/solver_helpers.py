@@ -1,6 +1,6 @@
 from crossword_solver.candidate_search_helpers import search_candidates
 from crossword_solver.crossword_helpers import Crossword, Hint
-import pandas as pd
+import numpy as np
 import re
 from copy import deepcopy
 
@@ -28,35 +28,33 @@ def find_whole_crossword_candidates(crossword):
         hint.candidates = filtered
 
 def find_suitable_candidates(hint, crossword):
-    #print(hint.coordinates)
-    matching = ''.join([crossword.matrix[x,y] for x, y in hint.coordinates]).replace('_', '.')
+    matching = ''.join(crossword.matrix[hint.x_min:hint.x_max+1, hint.y_min:hint.y_max+1].flatten()).replace('_', '.')
     suitable_candidates = []
     for c in hint.candidates:
         if re.match(matching, c.text):
             suitable_candidates.append(c)
     return suitable_candidates
 
-def solving_algorithm(crossword):
+def solving_algorithm(crossword, max_empty_words = 7):
     if len(crossword.hints)==0:
-        return [crossword]
-    
-    hint = crossword.hints[0]
+        yield np.copy(crossword.matrix), crossword.score
+  
+    hint = crossword.hints.pop(0)
     suitable_candidates = find_suitable_candidates(hint, crossword)
-    
-    results = []
-    new_crossword = deepcopy(crossword)
-    new_crossword.hints.pop(0)
-    result = solving_algorithm(new_crossword)
-    results.extend(result)
+
+    if len(suitable_candidates)==0 and max_empty_words==0:
+        yield np.copy(crossword.matrix), crossword.score
+    if max_empty_words>0:
+        yield from solving_algorithm(crossword, max_empty_words-1)
     for candidate in suitable_candidates:
-        new_crossword = deepcopy(crossword)
-        for i, (x, y) in enumerate(hint.coordinates):
-            new_crossword.matrix[y][x] = candidate.text[i]
-        new_crossword.hints.pop(0)
-        new_crossword.score += candidate.weight
-        result = solving_algorithm(new_crossword)
-        results.extend(result)
-    return results
+        prev_text = np.copy(crossword.matrix[hint.x_min:hint.x_max+1, hint.y_min:hint.y_max+1])
+        crossword.matrix[hint.x_min:hint.x_max+1, hint.y_min:hint.y_max+1] = np.array(list(candidate.text)
+                                                                                          ).reshape(hint.x_max+1-hint.x_min, -1)
+        crossword.score += candidate.weight
+        yield from solving_algorithm(crossword, max_empty_words)
+        crossword.score -= candidate.weight
+        crossword.matrix[hint.x_min:hint.x_max+1, hint.y_min:hint.y_max+1] = prev_text
+    crossword.hints.insert(0, hint)
 
 def display_results(solving_algorithm_results, topn = 100):
     sorted_results = sorted(solving_algorithm_results, key = lambda x:x.score)[::-1]

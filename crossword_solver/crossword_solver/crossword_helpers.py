@@ -32,6 +32,10 @@ class Hint():
             for i in range(1, length+1):
                 coordinates.append((x, y+i))
         self.coordinates = coordinates
+        self.x_max = max([c[0] for c in coordinates])
+        self.x_min = min([c[0] for c in coordinates])
+        self.y_max = max([c[1] for c in coordinates])
+        self.y_min = min([c[1] for c in coordinates])
         self.candidates = candidates
         #self.candidates = search_candidates(self.hint)
         #filtered_candidates = [c for c in candidates if c.length() == self.length]

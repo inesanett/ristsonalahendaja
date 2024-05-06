@@ -3,6 +3,7 @@ import unidecode
 from dataclasses import dataclass
 from gensim.models import KeyedVectors
 import pandas as pd
+from collections import Counter
 
 # Wikipedia search
 import wikipedia as wp
@@ -26,7 +27,7 @@ wn_voc = pd.read_parquet('../data/wordnet_contents.parquet')
 
 # Abbreviation
 ABBREVIATION_TAG = 'abbreviation'
-ABBREVIATION_WEIGHT = 0.9
+ABBREVIATION_WEIGHT = 0.7
 
 # Word2Vec
 word2vec_model = KeyedVectors.load_word2vec_format('../data/lemmas.cbow.s100.w2v.bin', binary=True)
@@ -163,7 +164,6 @@ def create_abbreviated_candidate(text, length):
     # If True, add abbrevated form of hint as a possible candidate
     splitted = text.split(" ")
     if len(splitted) == length:
-        print(text, splitted, length )
         abbreviation = ''.join([word[0] for word in splitted]).lower()
         return convert_results_to_candidates([abbreviation], ABBREVIATION_TAG, ABBREVIATION_WEIGHT)
     return []
@@ -180,9 +180,7 @@ def create_word2vec_candidates(text, max_results = MAX_WORD2VEC_RESULTS):
         return convert_results_to_candidates(neighbours, tag = WORD2VEC_TAG, weight = WORD2VEC_WEIGHT)
     return []
 
-## Candidate cleaning
-def remove_duplicates(candidate_list):
-    return list(set(candidate_list))
+
 
 def search_candidates(hint):
     hint_text = hint.hint
@@ -196,6 +194,14 @@ def search_candidates(hint):
     candidate_list.extend(create_abbreviated_candidate(hint_text, length))
     candidate_list.extend(create_word2vec_candidates(lemmatised_text))
     candidate_list.extend(find_regex_match(hint_text, length, wn_voc['word']))
-    candidate_list = remove_duplicates(candidate_list)
+    
+    counter = Counter(candidate_list)
+    for candidate, count in counter.items():
+        if count>1:
+            candidate.source = "multi"
+            candidate.weight = 1
+
+    candidate_list = list(counter.keys())
+
     sorted_candidates = sorted(candidate_list, key = lambda x: x.weight, reverse = True)
     return sorted_candidates
