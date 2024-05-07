@@ -180,8 +180,6 @@ def create_word2vec_candidates(text, max_results = MAX_WORD2VEC_RESULTS):
         return convert_results_to_candidates(neighbours, tag = WORD2VEC_TAG, weight = WORD2VEC_WEIGHT)
     return []
 
-
-
 def search_candidates(hint):
     hint_text = hint.hint
     length = hint.length
