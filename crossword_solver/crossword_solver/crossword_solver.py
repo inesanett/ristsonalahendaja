@@ -6,4 +6,4 @@ def solve_crossword(path):
     reorder_crossword_hints(crossword)
     find_whole_crossword_candidates(crossword)
     solutions = solving_algorithm(crossword)
-    raise solutions
+    return solutions
