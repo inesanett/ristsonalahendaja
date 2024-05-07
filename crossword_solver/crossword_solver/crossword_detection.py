@@ -1,7 +1,5 @@
 import cv2
-import numpy as np
 import re
-
 from crossword_solver.crossword_helpers import Crossword, Hint, Direction
 from crossword_solver.crossword_detection_utils import get_grid_from_image
 from crossword_solver.square_classification import classify_all_squares, SquareType

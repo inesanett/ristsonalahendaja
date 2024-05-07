@@ -8,7 +8,7 @@ from collections import Counter
 # Wikipedia search
 import wikipedia as wp
 wp.set_lang('et')
-MAX_WIKIPEDIA_RESULTS = 50
+MAX_WIKIPEDIA_RESULTS = 10
 WIKI_TAG = 'viki'
 WIKI_WEIGHT = 0.6
 
@@ -33,7 +33,7 @@ ABBREVIATION_WEIGHT = 0.7
 word2vec_model = KeyedVectors.load_word2vec_format('../data/lemmas.cbow.s100.w2v.bin', binary=True)
 WORD2VEC_TAG = 'word2vec'
 WORD2VEC_WEIGHT = 0.7
-MAX_WORD2VEC_RESULTS = 20
+MAX_WORD2VEC_RESULTS = 10
 
 @dataclass
 class Candidate():

@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 import pytesseract
-import re
 import Levenshtein
 
 #https://stackoverflow.com/questions/13538748/crop-black-edges-with-opencv

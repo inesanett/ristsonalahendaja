@@ -2,7 +2,6 @@ from crossword_solver.candidate_search_helpers import search_candidates
 from crossword_solver.crossword_helpers import Crossword, Hint
 import numpy as np
 import re
-from copy import deepcopy
 
 def reorder_crossword_hints(crossword):
     hints = sorted([hint for hint in crossword.hints if "vastus" not in hint.hint], key=lambda x: x.length, reverse = True)
@@ -37,25 +36,28 @@ def find_suitable_candidates(hint, crossword):
 
 def solving_algorithm(crossword, max_empty_words = 5):
     if len(crossword.hints)==0:
-        yield np.copy(crossword.matrix), crossword.score
+        yield np.copy(crossword.matrix), crossword.score, crossword.intersections
         return
-  
+    
     hint = crossword.hints.pop(0)
     suitable_candidates = find_suitable_candidates(hint, crossword)
 
     if len(suitable_candidates)==0 and max_empty_words==0:
-        yield np.copy(crossword.matrix), crossword.score
-        return
+        yield np.copy(crossword.matrix), crossword.score, crossword.intersections
     if max_empty_words>0:
         yield from solving_algorithm(crossword, max_empty_words-1)
+    
+    prev_text = np.copy(crossword.matrix[hint.x_min:hint.x_max+1, hint.y_min:hint.y_max+1])
+    intersection_count = np.count_nonzero(prev_text != crossword.unfilled_character)
+    crossword.intersections += intersection_count
     for candidate in suitable_candidates:
-        prev_text = np.copy(crossword.matrix[hint.x_min:hint.x_max+1, hint.y_min:hint.y_max+1])
         crossword.matrix[hint.x_min:hint.x_max+1, hint.y_min:hint.y_max+1] = np.array(list(candidate.text)
-                                                                                          ).reshape(hint.x_max+1-hint.x_min, -1)
+                                                                                          ).reshape(prev_text.shape)
         crossword.score += candidate.weight
         yield from solving_algorithm(crossword, max_empty_words)
         crossword.score -= candidate.weight
         crossword.matrix[hint.x_min:hint.x_max+1, hint.y_min:hint.y_max+1] = prev_text
+    crossword.intersections -= intersection_count
     crossword.hints.insert(0, hint)
 
 def display_results(solving_algorithm_results, topn = 100):

@@ -1,13 +1,16 @@
-from crossword_solver.crossword_detection import detect_crossword_from_file
-from crossword_solver.solver_helpers import reorder_crossword_hints, find_whole_crossword_candidates, solving_algorithm
+from copy import deepcopy
+from crossword_solver.solver_helpers import reorder_crossword_hints, solving_algorithm
 
-def solve_crossword(path):
-    crossword = detect_crossword_from_file(path)
-    reorder_crossword_hints(crossword)
-    find_whole_crossword_candidates(crossword)
-    min_score = 5
-    results = list()
-    for matrix, score in solving_algorithm(crossword, max_empty_words=0):
-        if score > min_score:
-            results.append((matrix, score))
+def solve_crossword(crossword, max_empty_words = 8, min_score = 10, min_intersections = 10):
+    results = []
+    solving_cw = deepcopy(crossword)
+    new_hints = []
+    for hint in solving_cw.hints:
+        if len(hint.candidates)>0:
+            new_hints.append(hint)
+    solving_cw.hints = new_hints
+    reorder_crossword_hints(solving_cw)
+    for matrix, score, intersections in solving_algorithm(solving_cw, max_empty_words=max_empty_words):
+        if score > min_score and intersections>min_intersections:
+            results.append((matrix, score, intersections))
     return results
