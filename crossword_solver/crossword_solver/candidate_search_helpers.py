@@ -186,12 +186,14 @@ def search_candidates(hint):
     hint_text = hint.hint
     length = hint.length
     candidate_list = []
-    lemmatised_text = lemmatise_text(hint_text)
+    cleaned_hint_text = re.sub(r'\.{3,}',' ', hint_text).strip()
+    cleaned_hint_text = re.sub(r' +', ' ', cleaned_hint_text)
+    lemmatised_text = lemmatise_text(cleaned_hint_text)
     if "vastus" in lemmatised_text:
         return candidate_list
     candidate_list.extend(wikipedia_search(lemmatised_text))
     candidate_list.extend(wordnet_search(lemmatised_text))
-    candidate_list.extend(create_abbreviated_candidate(hint_text, length))
+    candidate_list.extend(create_abbreviated_candidate(cleaned_hint_text, length))
     candidate_list.extend(create_word2vec_candidates(lemmatised_text))
     candidate_list.extend(find_regex_match(hint_text, length, wn_voc['word']))
     

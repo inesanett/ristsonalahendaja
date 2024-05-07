@@ -35,15 +35,17 @@ def find_suitable_candidates(hint, crossword):
             suitable_candidates.append(c)
     return suitable_candidates
 
-def solving_algorithm(crossword, max_empty_words = 7):
+def solving_algorithm(crossword, max_empty_words = 5):
     if len(crossword.hints)==0:
         yield np.copy(crossword.matrix), crossword.score
+        return
   
     hint = crossword.hints.pop(0)
     suitable_candidates = find_suitable_candidates(hint, crossword)
 
     if len(suitable_candidates)==0 and max_empty_words==0:
         yield np.copy(crossword.matrix), crossword.score
+        return
     if max_empty_words>0:
         yield from solving_algorithm(crossword, max_empty_words-1)
     for candidate in suitable_candidates:
