@@ -1,4 +1,4 @@
-from crossword_solver.crossword_helpers import Direction, Hint, Crossword, save_crossword
+from crossword_solver.crossword_utils import Direction, Hint, Crossword, save_crossword
 
 hints = []
 h = Hint(5, 0, Direction.DOWN, "kahe küüruga loom", 6)

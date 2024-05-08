@@ -1,5 +1,5 @@
 from enum import Enum
-from crossword_solver.crossword_helpers import Direction
+from crossword_solver.crossword_utils import Direction
 
 class SquareType(Enum):
     HINT = 1 # contains text, adjacent squares are empty or filled

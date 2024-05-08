@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from gensim.models import KeyedVectors
 import pandas as pd
 from collections import Counter
+from crossword_solver.paths import *
 
 # Wikipedia search
 import wikipedia as wp
@@ -23,14 +24,14 @@ WORDNET_HYPONYMS_WEIGHT = 0.8
 WORDNET_SIMILAR_WEIGHT = 0.8
 WORDNET_VOCAB = 'wordnet vocab'
 WORDNET_VOCAB_WEIGHT = 0.8
-wn_voc = pd.read_parquet('../data/wordnet_contents.parquet')
+wn_voc = pd.read_parquet(WORDNET_VOCAB_PATH)
 
 # Abbreviation
 ABBREVIATION_TAG = 'abbreviation'
 ABBREVIATION_WEIGHT = 0.7
 
 # Word2Vec
-word2vec_model = KeyedVectors.load_word2vec_format('../data/lemmas.cbow.s100.w2v.bin', binary=True)
+word2vec_model = KeyedVectors.load_word2vec_format(WORD2VEC_PATH, binary=True)
 WORD2VEC_TAG = 'word2vec'
 WORD2VEC_WEIGHT = 0.7
 MAX_WORD2VEC_RESULTS = 10

@@ -1,7 +1,6 @@
 from enum import Enum
 import itertools
 import pickle
-from crossword_solver.candidate_search_helpers import Candidate
 import numpy as np
         
 class Direction(Enum):
@@ -41,7 +40,7 @@ class Hint():
         return self.hint
 
 class Crossword():
-    def __init__(self, width, height, hints):
+    def __init__(self, width, height, hints, grid, image):
         self.width = width
         self.height = height
         self.hints = hints
@@ -52,6 +51,8 @@ class Crossword():
         self.matrix = np.full((width, height), self.unfilled_character, dtype = str)
         self.score = 0
         self.intersections = 0
+        self.grid = grid
+        self.image = image
 
     def set_out_of_range_spaces(self, x_from, x_to, y_from, y_to):
         for x, y in itertools.product(range(x_from, x_to), range(y_from, y_to)):

@@ -1,5 +1,5 @@
 from copy import deepcopy
-from crossword_solver.solver_helpers import reorder_crossword_hints, solving_algorithm
+from crossword_solver.solver_utils import reorder_crossword_hints, solving_algorithm
 
 def solve_crossword(crossword, max_empty_words = 8, min_score = 10, min_intersections = 10):
     results = []

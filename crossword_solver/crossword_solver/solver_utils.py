@@ -1,5 +1,4 @@
-from crossword_solver.candidate_search_helpers import search_candidates
-from crossword_solver.crossword_helpers import Crossword, Hint
+from crossword_solver.candidate_search import search_candidates
 import numpy as np
 import re
 

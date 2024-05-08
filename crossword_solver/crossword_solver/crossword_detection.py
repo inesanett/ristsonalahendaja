@@ -1,7 +1,7 @@
 import cv2
 import re
-from crossword_solver.crossword_helpers import Crossword, Hint, Direction
-from crossword_solver.crossword_detection_utils import get_grid_from_image
+from crossword_solver.crossword_utils import Crossword, Hint, Direction
+from crossword_solver.grid_detection import get_grid_from_image, crop_image_to_crossword_outline
 from crossword_solver.square_classification import classify_all_squares, SquareType
 from crossword_solver.text_detection import detect_text_for_all_squares
 
@@ -10,7 +10,8 @@ def detect_crossword_from_file(path):
     return detect_crossword(img)
 
 def detect_crossword(image):
-    grid = get_grid_from_image(image)
+    cropped_image = crop_image_to_crossword_outline(image)
+    grid = get_grid_from_image(cropped_image)
     detect_text_for_all_squares(grid)
     classify_all_squares(grid)
     hints = []
@@ -50,7 +51,7 @@ def detect_crossword(image):
                     Direction.DOWN,
                     hint2,
                     square.bottom_hint_len))
-    crossword = Crossword(grid.shape[0], grid.shape[1], hints)
+    crossword = Crossword(grid.shape[0], grid.shape[1], hints, grid, cropped_image)
     
     for square in grid.flatten():
         if square.type == SquareType.IRRELEVANT:

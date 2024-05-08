@@ -42,9 +42,7 @@ class GridSquare():
     def display(self):
         display_image(self.image)
 
-def get_grid_from_image(img):
-    cropped_image = crop_image_to_crossword_outline(img)
-    
+def get_grid_from_image(cropped_image):
     contours = detect_contours(cropped_image)
     clusters = range_clustering(contours)
     selected_contours = clusters[0]
