@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Ristsõnalahendaja</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+    <h1 style="text-align: left">Ristsõnalahendaja</h1>
+    
+    <form action="solved_crossword/{{crossword_name}}/0">
+        <input type="submit" onclick="myFunction()" value="Genereeri kandidaadid ja lahenda ristsõna">
+    </form>
+
+    <div id="image" class="image">
+        <img src="{{base64img}}">
+    </div>
+
+</div>
+
+
+<div class="loader" id="loader" style="display: none;"></div>
+
+<script>
+  function myFunction() {
+    var x = document.getElementById("loader");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+</script>
+
+
+{% endblock %}
