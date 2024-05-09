@@ -6,7 +6,7 @@ from collections import defaultdict
 from crossword_solver.solver_utils import find_whole_crossword_candidates
 from crossword_solver.crossword_solver import solve_crossword
 from crossword_solver.crossword_detection import detect_crossword_from_file
-from visualisations import plot_square_types, plot_solution_texts
+from visualisations import plot_square_types, plot_solution_texts, plot_no_solution
 
 site = Blueprint("ristsona", __name__, template_folder = "templates", static_folder = "static")
 UPLOAD_FOLDER = os.path.join(site.root_path, 'uploads')
@@ -36,7 +36,7 @@ def upload_file():
     if file.filename == '':
         return render_template('index.html', description="Unustasid faili valida")
     if file and not allowed_file(file.filename):
-        return render_template('index.html', description="See faili formaat ei ole toetatud")
+        return render_template('index.html', description="See failiformaat ei ole toetatud")
     
     # For saving file
     filename = secure_filename(file.filename)
@@ -63,11 +63,24 @@ def solved_crossword(crossword_name, id):
         # Solve crossword
         find_whole_crossword_candidates(CROSSWORDS[crossword_name])
         results = solve_crossword(crossword)
+        if len(results) >= 5:
+            topn_results = sorted(results, key=lambda x: x[2], reverse = True)[:5]
+            topn_results = [(plot_solution_texts(crossword, matrix), round(score), intersections) for matrix, score, intersections in topn_results]
+        #else:
+        #    results = solve_crossword(crossword, min_score=1, min_intersections=0)
+        #    topn_results = sorted(results, key=lambda x: x[2], reverse = True)[:5]
+        #    topn_results = [(plot_solution_texts(crossword, matrix), round(score), intersections) for matrix, score, intersections in topn_results]
+            
+        if topn_results:    
+            ALL_CROSSWORD_SOLUTIONS[crossword_name] = topn_results
+        else:
+            return render_template("solved_crossword.html",
+                                    crossword_name = crossword_name,
+                                    solution_id = -1, 
+                                    solutions = [], 
+                                    base64img = plot_no_solution(crossword)
+                                   )
         
-        topn_results = sorted(results, key=lambda x: x[2], reverse = True)[:10]
-        topn_results = [(plot_solution_texts(crossword, matrix), round(score), intersections) for matrix, score, intersections in topn_results]
-        ALL_CROSSWORD_SOLUTIONS[crossword_name] = topn_results
-    
     return render_template("solved_crossword.html",
                            crossword_name = crossword_name,
                            solution_id = id, 

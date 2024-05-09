@@ -41,6 +41,16 @@ def plot_solution_texts(crossword, solution_matrix):
                 draw.text((gs.x_min+20,gs.y_max-45), t, font=font, fill='#000')
     return pil_to_base64(pil_image)
 
+def plot_no_solution(crossword):
+    font = ImageFont.truetype(FONT_PATH, 40)
+    image = deepcopy(crossword.image)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    pil_image = Image.fromarray(image)    
+    t = "LAHENDUSI EI LEITUD"
+    draw = ImageDraw.Draw(pil_image)
+    draw.text((crossword.grid_x+100, crossword.grid_y+100), t, font=font, fill='#cd0000')
+    return pil_to_base64(pil_image)
+
 def cv2_to_base64(input_img):
     file_object = BytesIO()
     img = Image.fromarray(cv2.cvtColor(input_img , cv2.COLOR_BGR2RGB))

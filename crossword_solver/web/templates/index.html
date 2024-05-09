@@ -11,7 +11,7 @@
     <form action="{{url_for('ristsona.upload_file')}}" method="POST" id="POST"
           enctype=multipart/form-data>
       <input type="file" id="myFile" name="filename">
-      <input type="submit" onclick="myFunction()">
+      <input type="submit">
     </form>
 
     <textarea readonly id="description" name="description" rows="10" cols="60">
@@ -20,18 +20,5 @@
 
 
 </div>
-
-<div class="loader" id="loader" style="display: none;"></div>
-
-<script>
-  function myFunction() {
-    var x = document.getElementById("loader");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
-  }
-</script>
 
 {% endblock %}

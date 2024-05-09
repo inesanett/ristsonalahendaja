@@ -1,7 +1,7 @@
 from copy import deepcopy
 from crossword_solver.solver_utils import reorder_crossword_hints, solving_algorithm
 
-def solve_crossword(crossword, max_empty_words = 8, min_score = 10, min_intersections = 10):
+def solve_crossword(crossword, max_empty_words = 8, min_score = 5, min_intersections = 5):
     results = []
     solving_cw = deepcopy(crossword)
     new_hints = []

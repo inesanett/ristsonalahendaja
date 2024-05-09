@@ -3,13 +3,17 @@
 Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast ning kuvab võimalikud lahendused.
 
 ## Projekti käivitamine
-1) Salvesta projekt arvutisse.
+1) Salvesta projekt arvutisse
 
-2) Lae Eesti Keeleressursside Keskuse veebilehelt alla eeltreenitud Word2Vec mudel "lemmas.cbow.s100.w2v.bin.gz", mille leiad siit: https://entu.keeleressursid.ee/shared/7540/I7G5aC1YgdInohMJjUhi1d5e4jLdhQerZ4ikezz1JEv3B9yuJt9KiPl9lrS87Yz0. Paki fail lahti ning lisa mudel data kausta.
+2) Lae alla Docker Desktop
 
-3) Liigu käsureal projekti crossword_solver kausta ning jooksuta käsku "python -e ."
+3) Jooksuta ristsõnalahendaja kaustas (seal kus asub Dockerfile) käsureal järgnevaid käske:
+ 
+ * docker build -t ristsona . *
 
-4) Veebirakenduse käitamiseks liigu kausta "web" ning jooksuta käsku "python app.py". Liigu tagastatud veebiaadressile ning järgi seal antud juhiseid.
+ * docker run -p 5000:5000 ristsona *
+
+4) Järgi veebilehel kirjeldatud juhiseid
 
 
 
