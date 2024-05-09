@@ -4,8 +4,6 @@ Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast
 
 ## Projekti käivitamine
 
-Projekti juhend käib Windows operatsioonisüsteemi kohta.
-
 1) Salvesta projekt arvutisse.
 
 2) Lae alla Docker Desktop
