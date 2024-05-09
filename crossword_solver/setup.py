@@ -17,6 +17,8 @@ setup(
         'Levenshtein',
         'pyarrow',
         'pillow',
+        'flask',
+        'opencv-python'
     ],
     author='Ines Anett Nigol',
     author_email='ines.anett.nigol@ut.ee',
