@@ -10,8 +10,8 @@ Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast
 
 3) Jooksuta ristsõnalahendaja kaustas (seal kus asub Dockerfile) käsureal järgnevaid käske:
  
-  *docker build -t ristsona .* 
+      *docker build -t ristsona .* 
+    
+      *docker run -p 5000:5000 ristsona* 
 
-  *docker run -p 5000:5000 ristsona* 
-
-4) Mine lehele [127.0.0.1:5000](127.0.0.1:5000) ja järgi veebilehel kirjeldatud juhiseid.
+4) Mine lehele [127.0.0.1:5000](http://127.0.0.1:5000) ja järgi veebilehel kirjeldatud juhiseid.
