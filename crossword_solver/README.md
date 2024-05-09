@@ -4,7 +4,7 @@ Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast
 
 ## Projekti käivitamine
 
-1) Salvesta projekt arvutisse.
+1) Salvesta projekt arvutisse
 
 2) Lae alla Docker Desktop
 
@@ -14,4 +14,4 @@ Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast
     
       *docker run -p 5000:5000 ristsona* 
 
-4) Mine lehele [127.0.0.1:5000](http://127.0.0.1:5000) ja järgi veebilehel kirjeldatud juhiseid.
+4) Mine lehele [127.0.0.1:5000](http://127.0.0.1:5000) ja järgi veebilehel kirjeldatud juhiseid
