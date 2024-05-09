@@ -3,7 +3,10 @@
 Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast ning kuvab võimalikud lahendused.
 
 ## Projekti käivitamine
-1) Salvesta projekt arvutisse
+
+Projekti juhend käib Windows operatsioonisüsteemi kohta.
+
+1) Salvesta projekt arvutisse.
 
 2) Lae alla Docker Desktop
 
@@ -14,6 +17,3 @@ Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast
  * docker run -p 5000:5000 ristsona *
 
 4) Järgi veebilehel kirjeldatud juhiseid
-
-
-
