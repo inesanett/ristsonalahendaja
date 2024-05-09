@@ -12,8 +12,8 @@ Projekti juhend käib Windows operatsioonisüsteemi kohta.
 
 3) Jooksuta ristsõnalahendaja kaustas (seal kus asub Dockerfile) käsureal järgnevaid käske:
  
- * docker build -t ristsona . *
+  docker build -t ristsona . 
 
- * docker run -p 5000:5000 ristsona *
+  docker run -p 5000:5000 ristsona 
 
 4) Järgi veebilehel kirjeldatud juhiseid
