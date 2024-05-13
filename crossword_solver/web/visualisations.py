@@ -21,7 +21,7 @@ def plot_square_types(crossword):
     }
 
     plotting_image = deepcopy(crossword.image)
-    plotting_image = cv2.cvtColor(plotting_image, cv2.COLOR_BGR2GRAY)
+    plotting_image = cv2.cvtColor(plotting_image, cv2.COLOR_BGR2RGB)
     for gs in crossword.grid.flatten():
         t = type_to_text[gs.type]
         plotting_image = cv2.circle(plotting_image, (gs.x_min,gs.y_min), radius=3, color=(0, 0, 0), thickness=-1)

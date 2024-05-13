@@ -11,7 +11,7 @@ import wikipedia as wp
 wp.set_lang('et')
 MAX_WIKIPEDIA_RESULTS = 10
 WIKI_TAG = 'viki'
-WIKI_WEIGHT = 0.6
+WIKI_WEIGHT = 1
 
 # WordNet search
 from estnltk import download
@@ -19,21 +19,21 @@ download('wordnet')
 from estnltk.wordnet import Wordnet
 from estnltk import Text
 WORDNET_TAG = 'wordnet'
-WORDNET_LEMMAS_WEIGHT = 0.9
-WORDNET_HYPONYMS_WEIGHT = 0.8
-WORDNET_SIMILAR_WEIGHT = 0.8
+WORDNET_LEMMAS_WEIGHT = 1
+WORDNET_HYPONYMS_WEIGHT = 1
+WORDNET_SIMILAR_WEIGHT = 1
 WORDNET_VOCAB = 'wordnet vocab'
-WORDNET_VOCAB_WEIGHT = 0.8
+WORDNET_VOCAB_WEIGHT = 1
 wn_voc = pd.read_parquet(WORDNET_VOCAB_PATH)
 
 # Abbreviation
 ABBREVIATION_TAG = 'abbreviation'
-ABBREVIATION_WEIGHT = 0.7
+ABBREVIATION_WEIGHT = 1
 
 # Word2Vec
 word2vec_model = KeyedVectors.load_word2vec_format(WORD2VEC_PATH, binary=True)
 WORD2VEC_TAG = 'word2vec'
-WORD2VEC_WEIGHT = 0.7
+WORD2VEC_WEIGHT = 1
 MAX_WORD2VEC_RESULTS = 10
 
 @dataclass
@@ -108,7 +108,7 @@ def expand_candidate_text(text_list):
 
 ## Create candidates from text
 def create_candidates(word_list, tag, weight):
-    return [Candidate(candidate, tag, weight) for candidate in word_list]
+    return [Candidate(clean_text(candidate), tag, weight) for candidate in word_list]
 
 ## Take in a list of words and return expanded candidates list
 def convert_results_to_candidates(text_list, tag, weight):
@@ -200,7 +200,7 @@ def search_candidates(hint):
     for candidate, count in counter.items():
         if count>1:
             candidate.source = "multi"
-            candidate.weight = 1
+            candidate.weight = 1.1
 
     candidate_list = list(counter.keys())
 

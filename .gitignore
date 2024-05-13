@@ -1,5 +1,6 @@
 lemmas.cbow.s100.w2v.bin
 pictures/
+uploads/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
