@@ -6,7 +6,7 @@ Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast
 
 1) Salvesta projekt arvutisse
 
-2) Lae alla Docker Desktop
+2) Lae alla Docker Desktop ning käivita rakendus
 
 3) Jooksuta ristsõnalahendaja kaustas (seal kus asub Dockerfile) käsureal järgnevaid käske:
  
