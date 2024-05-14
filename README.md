@@ -1,6 +1,6 @@
 # Ristsõnalahendaja
 
-Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast ning kuvab võimalikud lahendused.
+Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast ning kuvab võimalikud lahendused. Programm eeldab, et ristsõna koosneb ristkülikukujulistest lahtritest, mis on sama suured. Pildil ei tohi ruudustik olla moonutatud, programm eeldab, et ruudustiku jooned lõikuvad täisnurga all.
 
 ## Projekti käivitamine
 
