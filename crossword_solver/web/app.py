@@ -62,16 +62,10 @@ def solved_crossword(crossword_name, id):
     if len(ALL_CROSSWORD_SOLUTIONS[crossword_name])==0:
         # Solve crossword
         find_whole_crossword_candidates(CROSSWORDS[crossword_name])
-        results = solve_crossword(crossword)
-        topn_results = sorted(results, key=lambda x: x[2], reverse = True)[:5]
-        topn_results = [(plot_solution_texts(crossword, matrix), round(score), intersections) for matrix, score, intersections in topn_results]
-        #else:
-        #    results = solve_crossword(crossword, min_score=1, min_intersections=0)
-        #    topn_results = sorted(results, key=lambda x: x[2], reverse = True)[:5]
-        #    topn_results = [(plot_solution_texts(crossword, matrix), round(score), intersections) for matrix, score, intersections in topn_results]
-            
-        if topn_results:    
-            ALL_CROSSWORD_SOLUTIONS[crossword_name] = topn_results
+        results = solve_crossword(crossword, max_empty_words = 6, max_solutions_count = 10)
+        results = [(plot_solution_texts(crossword, matrix), round(score, 1), intersections) for matrix, score, intersections in results] 
+        if len(results)>0:    
+            ALL_CROSSWORD_SOLUTIONS[crossword_name] = results
         else:
             return render_template("solved_crossword.html",
                                     crossword_name = crossword_name,

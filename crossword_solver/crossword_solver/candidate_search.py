@@ -117,10 +117,13 @@ def convert_results_to_candidates(text_list, tag, weight):
     
 # Wikipedia search
 def wikipedia_search(text, max_wikipedia_results = MAX_WIKIPEDIA_RESULTS):
-    query = lemmatise_text(text)
-    if len(query) > 0:
-        wiki_results = wp.search(query, results = max_wikipedia_results)
-        return convert_results_to_candidates(wiki_results, WIKI_TAG, WIKI_WEIGHT)
+    try:
+        query = lemmatise_text(text)
+        if len(query) > 0:
+            wiki_results = wp.search(query, results = max_wikipedia_results)
+            return convert_results_to_candidates(wiki_results, WIKI_TAG, WIKI_WEIGHT)
+    except:
+        pass
     return []
 
 # Wordnet search
