@@ -63,9 +63,8 @@ def solved_crossword(crossword_name, id):
         # Solve crossword
         find_whole_crossword_candidates(CROSSWORDS[crossword_name])
         results = solve_crossword(crossword)
-        if len(results) >= 5:
-            topn_results = sorted(results, key=lambda x: x[2], reverse = True)[:5]
-            topn_results = [(plot_solution_texts(crossword, matrix), round(score), intersections) for matrix, score, intersections in topn_results]
+        topn_results = sorted(results, key=lambda x: x[2], reverse = True)[:5]
+        topn_results = [(plot_solution_texts(crossword, matrix), round(score), intersections) for matrix, score, intersections in topn_results]
         #else:
         #    results = solve_crossword(crossword, min_score=1, min_intersections=0)
         #    topn_results = sorted(results, key=lambda x: x[2], reverse = True)[:5]
@@ -101,4 +100,4 @@ if __name__ == "__main__":
     else:
         app.register_blueprint(site)
     
-    app.run(debug=True, host="0.0.0.0", threaded=False)
+    app.run(debug=False, host="0.0.0.0", threaded=False, use_reloader=False)

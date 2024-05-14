@@ -34,4 +34,4 @@ RUN pip install --upgrade pip &&\
 RUN mv /app/lemmas.cbow.s100.w2v.bin /app/crossword_solver/data/lemmas.cbow.s100.w2v.bin
 
 WORKDIR /app/crossword_solver/web
-CMD ["python",  "app.py"] 
+CMD ["python", "-u", "app.py"] 

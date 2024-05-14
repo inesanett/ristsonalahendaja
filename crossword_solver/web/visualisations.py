@@ -21,7 +21,6 @@ def plot_square_types(crossword):
     }
 
     plotting_image = deepcopy(crossword.image)
-    plotting_image = cv2.cvtColor(plotting_image, cv2.COLOR_BGR2RGB)
     for gs in crossword.grid.flatten():
         t = type_to_text[gs.type]
         plotting_image = cv2.circle(plotting_image, (gs.x_min,gs.y_min), radius=3, color=(0, 0, 0), thickness=-1)
@@ -48,8 +47,8 @@ def plot_no_solution(crossword):
     pil_image = Image.fromarray(image)    
     t = "LAHENDUSI EI LEITUD"
     draw = ImageDraw.Draw(pil_image)
-    draw.text((crossword.grid_x+100, crossword.grid_y+100), t, font=font, fill='#cd0000')
-    return pil_to_base64(pil_image)
+    draw.text((image.shape[1]/2, image.shape[0]/2), t, font=font, fill='#cd0000')
+    return pil_to_base64(draw)
 
 def cv2_to_base64(input_img):
     file_object = BytesIO()
