@@ -48,7 +48,7 @@ def plot_no_solution(crossword):
     t = "LAHENDUSI EI LEITUD"
     draw = ImageDraw.Draw(pil_image)
     draw.text((image.shape[1]/2, image.shape[0]/2), t, font=font, fill='#cd0000')
-    return pil_to_base64(draw)
+    return pil_to_base64(pil_image)
 
 def cv2_to_base64(input_img):
     file_object = BytesIO()
