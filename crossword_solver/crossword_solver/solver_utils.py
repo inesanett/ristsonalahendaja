@@ -58,10 +58,3 @@ def solving_algorithm(crossword, max_empty_words = 5):
         crossword.matrix[hint.x_min:hint.x_max+1, hint.y_min:hint.y_max+1] = prev_text
     crossword.intersections -= intersection_count
     crossword.hints.insert(0, hint)
-
-def display_results(solving_algorithm_results, topn = 100):
-    sorted_results = sorted(solving_algorithm_results, key = lambda x:x.score)[::-1]
-    for solution in sorted_results[:topn]:
-        print(solution.score)
-        print(solution)
-    return
