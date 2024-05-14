@@ -1,6 +1,6 @@
 import os
 
-# Change this to your data folder path
+# Change this to your data folder path if you want to test locally
 DATA_FOLDER_PATH = '/app/crossword_solver/data'
 #DATA_FOLDER_PATH = 'C:/Users/ianigol/Documents/MAGISTER/ristsonalahendaja/crossword_solver/data'
 
