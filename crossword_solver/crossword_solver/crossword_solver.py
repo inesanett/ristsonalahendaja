@@ -1,7 +1,10 @@
 from copy import deepcopy
 from crossword_solver.solver_utils import reorder_crossword_hints, solving_algorithm
+import time
 
 def solve_crossword(crossword, max_empty_words = 6, max_solutions_count = 10):
+    start_time = time.time()
+
     results = []
     solving_cw = deepcopy(crossword)
     new_hints = []
@@ -21,6 +24,8 @@ def solve_crossword(crossword, max_empty_words = 6, max_solutions_count = 10):
             results = sorted(results, key = lambda x: (x[2], x[1]), reverse = True)
             min_intersections = results[-1][2]
             min_score = results[-1][1]
+        if time.time()-start_time>180:
+            break
     # Only keep solutions with a least one word filled in
     results = [r for r in results if r[1]>0]
     return results
