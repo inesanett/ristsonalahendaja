@@ -8,7 +8,7 @@ def crop_edges(image, thresh):
     y_nonzero, x_nonzero = np.nonzero(thresh)
     if len(y_nonzero) == 0 or len(x_nonzero) == 0:
         return image
-    return image[np.min(y_nonzero):np.max(y_nonzero), np.min(x_nonzero):np.max(x_nonzero)]
+    return image[np.min(y_nonzero):np.max(y_nonzero)+1, np.min(x_nonzero):np.max(x_nonzero)+1]
 
 def resize(img, resize_param):
     res = cv2.resize(img, (0,0), fx=resize_param, fy=resize_param, interpolation = cv2.INTER_CUBIC)

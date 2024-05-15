@@ -1,5 +1,6 @@
 from enum import Enum
 from crossword_solver.crossword_utils import Direction
+import re
 
 class SquareType(Enum):
     HINT = 1 # contains text, adjacent squares are empty or filled
@@ -10,7 +11,7 @@ class SquareType(Enum):
 def classify_square(square):
     if square.brightness < 0.65:
         return SquareType.IRRELEVANT
-    if square.text == '':
+    if check_if_clean_text_empty(square.text):
         return SquareType.EMPTY
     if "\n\n" in square.text:
         return SquareType.MULTIHINT
@@ -57,3 +58,13 @@ def classify_all_squares(grid):
             square.type = SquareType.HINT 
             square.hint_direction = Direction.RIGHT
             square.hint_len = right_empty_length
+
+def check_if_clean_text_empty(text):
+    clean = text.replace("\n", " ")
+    clean = clean.replace("-", "...")
+    clean = re.sub(r'([^\w\s.-]|_)','.', clean)
+    clean = re.sub(r'\.{2,}','...', clean)
+    clean = re.sub(r'(?<!\.)\.(?!\.)', ' ', clean)
+    clean = re.sub(r' +', ' ', clean)
+    clean = clean.strip()
+    return clean == ""
