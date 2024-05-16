@@ -1,24 +1,33 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Ristsõnalahendaja</title>
+<div id="title">
+  <h1> Ristsõnalahendaja </h1>
+  <h2> Pildi üleslaadimisel tuvastatakse ristsõnaruudustik. Ole kannatlik, see võib võtta mõne minuti.</h2>
+</div>
 {% endblock %}
 
 {% block body %}
 <div class="content">
-    <h1 style="text-align: left">Ristsõnalahendaja</h1>
-
-    <form action="{{url_for('ristsona.upload_file')}}" method="POST" id="POST"
-          enctype=multipart/form-data>
+  <div class="add-space">
+    <form action="{{url_for('ristsona.upload_file')}}" method="POST" id="POST" enctype=multipart/form-data>
       <input type="file" id="myFile" name="filename">
-      <input type="submit">
+      <label for="myFile" class="custom-button">Vali fail</label>
+      <span class="file-name">Faili pole valitud</span>
+      <input type="submit" id="mySubmit">
+      <label for="mySubmit" class="custom-button">Lae üles</label>
     </form>
-
-    <textarea readonly id="description" name="description" rows="10" cols="60">
-      {{ description }}
-    </textarea>
-
-
+  </div>
+  <div class="add-space">
+    <p> Sobivad vormingud: png, jpg, jpeg. </p>
+  </div>
 </div>
+
+<script>
+  document.getElementById('myFile').addEventListener('change', function () {
+    var fileName = this.files[0] ? this.files[0].name : 'Faili pole valitud';
+    document.querySelector('.file-name').textContent = fileName;
+  });
+</script>
 
 {% endblock %}

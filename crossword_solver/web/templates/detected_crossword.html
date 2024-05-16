@@ -1,37 +1,44 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Ristsõnalahendaja</title>
+<div id="title">
+    <h1> Ristsõnalahendaja </h1>
+    <h2> Pildil on näha ristsõnaruudustiku tuvastamise tulemus. Ristsõnale on kuvatud erinevate lahtrite klassid.
+        Tabelis on toodud kasutatud tähised ja nende tähendused. Ristsõna lahendamiseks vajuta nuppu "Lahenda ristsõna".
+        Lahendamine võib võtta minuteid.</h2>
+</div>
 {% endblock %}
 
 {% block body %}
 <div class="content">
-    <h1 style="text-align: left">Ristsõnalahendaja</h1>
-    
-    <form action="solved_crossword/{{crossword_name}}/0">
-        <input type="submit" value="Lahenda ristsõna">
-    </form>
 
-    <table>
-        <tbody>
-            <tr>
-                <td>Tähis</td>
-                <td>V</td>
-                <td>W</td>
-                <td>O</td>
-                <td>X</td>
-            </tr>
-            <tr>
-                <td>Tähendus</td>
-                <td>Vihje</td>
-                <td>Topeltvihje</td>
-                <td>Vastuse lahter</td>
-                <td>Ebarelevantne</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="non_image_content">
+        <table>
+            <tbody>
+                <tr>
+                    <td class="bold">Tähis</td>
+                    <td>V</td>
+                    <td>W</td>
+                    <td>O</td>
+                    <td>X</td>
+                </tr>
+                <tr>
+                    <td class="bold">Tähendus</td>
+                    <td>Vihje</td>
+                    <td>Topeltvihje</td>
+                    <td>Vastuselahter</td>
+                    <td>Ebarelevantne</td>
+                </tr>
+            </tbody>
+        </table>
 
-    <div id="image" class="image">
+        <form action="solved_crossword/{{crossword_name}}/0">
+            <input type="submit" id="mySolver">
+            <label for="mySolver" class="custom-button">Lahenda ristsõna</label>
+        </form>
+    </div>
+
+    <div class="image">
         <img src="{{base64img}}">
     </div>
 

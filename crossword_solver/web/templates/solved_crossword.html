@@ -1,31 +1,33 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Ristsõnalahendaja</title>
-{% endblock %}
-
-{% block body %}
-<h1 style="text-align: left">Ristsõnalahendaja</h1>
-<div id="solved_content">
-  
-  <div id="image" class="image">
-    <img src="{{base64img}}">
-  </div>
+<div id="title">
+  <h1> Ristsõnalahendaja </h1>
+  <h2> Kuvatud on lahendatud ristsõna. Rippmenüüst on võimalik valida ka teiste lahenduste vahel.</h2>
 
   <div class="dropdown">
     <button class="dropbtn">Vali lahendus</button>
     <div class="dropdown-content">
       {% for solution in solutions %}
-        {% if loop.index0 == solution_id %}
-          <a id="currently_selected" href="{{loop.index0}}">Lahendus {{loop.index0}}, skoor-{{solution[1]}}, ristumised-{{solution[2]}}</a>
-        {% else %}
-          <a href="{{loop.index0}}">Lahendus {{loop.index0}}, skoor-{{solution[1]}}, ristumised-{{solution[2]}}</a>
-        {% endif %}
-        
+      {% if loop.index0 == solution_id %}
+      <a id="currently_selected" href="{{loop.index0}}">Lahendus {{loop.index0+1}}, skoor-{{solution[1]}},
+        ristumised-{{solution[2]}}</a>
+      {% else %}
+      <a href="{{loop.index0}}">Lahendus {{loop.index0+1}}, skoor-{{solution[1]}}, ristumised-{{solution[2]}}</a>
+      {% endif %}
+
       {% endfor %}
     </div>
-  </div>
 
-    
+  </div>
 </div>
+
+{% endblock %}
+
+{% block body %}
+<div class="content">
+  <img src="{{base64img}}">
+</div>
+
+
 {% endblock %}
