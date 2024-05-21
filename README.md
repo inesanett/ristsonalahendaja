@@ -2,7 +2,14 @@
 
 Tegu on eestikeelsete ristsõnade lahendajaga, mis võtab ette pildi ristsõnast ning kuvab võimalikud lahendused. Programm eeldab, et ristsõna koosneb ristkülikukujulistest lahtritest, mis on sama suured. Pildil ei tohi ruudustik olla moonutatud, programm eeldab, et ruudustiku jooned lõikuvad täisnurga all.
 
-## Projekti käivitamine
+## Ligipääs veebilehe kaudu
+
+Loodud ristsõnalahendaja on ülespandud ülikooli serverisse ning sellele saab ligi järgneva veebilehe kaudu: [https://ristsonalahendaja.cs.ut.ee/](https://ristsonalahendaja.cs.ut.ee/). Antud veebiserver ei suuda hallata korraga palju kasutajaid. Juhul kui lehte kasutab korraga mitu inimest võib rakendus muutuda väga aeglaseks.
+
+
+## Projekti käivitamine Dockeri kaudu
+
+Soovi korral on võimalik katsetada projekti ka oma arvutis. Selleks läbi järgmised sammud:
 
 1) Salvesta projekt arvutisse
 
